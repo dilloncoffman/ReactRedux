@@ -1,14 +1,12 @@
 /* eslint-disable prettier/prettier */
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loadAuthors } from '../../redux/actions/authorActions';
 import { loadCourses } from '../../redux/actions/courseAction';
 
-class ManageCoursePage extends Component {
-  componentDidMount() {
-    const { loadCoursesDispatch, loadAuthorsDispatch, courses, authors } = this.props;
-
+const ManageCoursePage = ({ loadCoursesDispatch, loadAuthorsDispatch, courses, authors }) => {
+  useEffect(() => {
     if (courses.length === 0) { // to avoid reloading if courses data was already loaded
       loadCoursesDispatch().catch((error) => {
         alert(`Loading courses failed: ${error}`);
@@ -20,17 +18,13 @@ class ManageCoursePage extends Component {
         alert(`Loading authors failed: ${error}`);
       });
     }
-  }
+  }, []) // empty dependency array to run only once - when the component mounts
 
-  render() {
-    const { courses } = this.props; // courses is available as a prop because we mapped the Redux store state for courses to this container component in mapStateToProps function below
-
-    return (
-      <>
-        <h2>Manage Course</h2>
-      </>
-    );
-  }
+  return (
+    <>
+      <h2>Manage Course</h2>
+    </>
+  );
 }
 
 ManageCoursePage.propTypes = {
