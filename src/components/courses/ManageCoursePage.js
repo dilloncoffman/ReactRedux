@@ -36,8 +36,8 @@ class ManageCoursePage extends Component {
 ManageCoursePage.propTypes = {
   authors: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
-  loadCourses: PropTypes.func.isRequired,
-  loadAuthors: PropTypes.func.isRequired,
+  loadCoursesDispatch: PropTypes.func.isRequired,
+  loadAuthorsDispatch: PropTypes.func.isRequired,
 };
 
 // *** BE SPECIFIC. REQUEST ONLY THE DATA YOUR COMPONENT NEEDS. Could cause unnecessary re-renders otherwise ***
