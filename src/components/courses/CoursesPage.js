@@ -5,8 +5,15 @@ import { bindActionCreators } from 'redux';
 import * as courseActions from '../../redux/actions/courseAction';
 
 class CoursesPage extends Component {
+  componentDidMount() {
+    const { actions } = this.props;
+
+    actions.loadCourses().catch((error) => {
+      alert(`Loading courses failed: ${error}`);
+    });
+  }
+
   render() {
-    const { course } = this.state;
     const { courses } = this.props; // courses is available as a prop because we mapped the Redux store state for courses to this container component in mapStateToProps function below
 
     return (
