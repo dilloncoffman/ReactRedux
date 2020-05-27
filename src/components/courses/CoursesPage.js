@@ -19,9 +19,9 @@ class CoursesPage extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const { course } = this.state;
-    const { dispatch } = this.props;
+    const { createCourse } = this.props; // now getting the createCourse action itself from props since we mapped dispatch for action to props of this component
 
-    dispatch(courseActions.createCourse(course)); // dispatch createCourse action and passing it new course
+    createCourse(course); // can now just dispatch the action func itself since we mapped it to props inside a dispatch() call already in mapDispatchToProps
   };
 
   render() {
@@ -45,7 +45,7 @@ class CoursesPage extends Component {
 
 CoursesPage.propTypes = {
   courses: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired, // clarified that we expect the dispatch() to be passed in to CoursesPage component because connect() automatically injects it as a prop IF we omit mapDispatchToProps from the 2nd arg of connect()
+  createCourse: PropTypes.func.isRequired, // clarified that we expect the dispatch() to be passed in to CoursesPage component because connect() automatically injects it as a prop IF we omit mapDispatchToProps from the 2nd arg of connect()
 };
 
 // *** BE SPECIFIC. REQUEST ONLY THE DATA YOUR COMPONENT NEEDS. Could cause unnecessary re-renders otherwise ***
@@ -55,7 +55,13 @@ function mapStateToProps(state) {
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    createCourse: (course) => dispatch(courseActions.createCourse(course)),
+  };
+}
+
 // *** WHY we use connect(mapStateToProps, mapDispatchToProps)(OurContainerComponent): connect() returns a function that then calls our component ***
 // const connectStateAndProps = connect(mapStateToProps, mapDispatchToProps);
 // export default connectStateAndProps(CoursesPage)
-export default connect(mapStateToProps)(CoursesPage); // CAN OMIT mapDispatchToProps, OUR COMPONENT GETS A DISPATCH PROP INJECTED AUTOMATICALLY FROM connect() when we don't specify the 2nd arg THAT IT CAN CALL TO DISPATCH ACTIONS
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage); // CAN OMIT mapDispatchToProps, OUR COMPONENT GETS A DISPATCH PROP INJECTED AUTOMATICALLY FROM connect() when we don't specify the 2nd arg THAT IT CAN CALL TO DISPATCH ACTIONS
