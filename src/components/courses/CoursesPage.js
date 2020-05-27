@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import * as courseActions from '../../redux/actions/courseAction';
 
 class CoursesPage extends Component {
@@ -19,9 +20,9 @@ class CoursesPage extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const { course } = this.state;
-    const { createCourse } = this.props; // now getting the createCourse action itself from props since we mapped dispatch for action to props of this component
+    const { actions } = this.props; // now getting the createCourse action itself from props since we mapped dispatch for action to props of this component
 
-    createCourse(course); // can now just dispatch the action func itself since we mapped it to props inside a dispatch() call already in mapDispatchToProps
+    actions.createCourse(course); // now calling one of many actions available on the actions prop after mapDispatchToProps used bindActionCreators to wrap all actions for courses in a dispatch()
   };
 
   render() {
@@ -45,7 +46,7 @@ class CoursesPage extends Component {
 
 CoursesPage.propTypes = {
   courses: PropTypes.array.isRequired,
-  createCourse: PropTypes.func.isRequired, // clarified that we expect the dispatch() to be passed in to CoursesPage component because connect() automatically injects it as a prop IF we omit mapDispatchToProps from the 2nd arg of connect()
+  actions: PropTypes.object.isRequired, // we expect actions to be passed in and required because we wrap all of our courseActions below with a call to dispatch()
 };
 
 // *** BE SPECIFIC. REQUEST ONLY THE DATA YOUR COMPONENT NEEDS. Could cause unnecessary re-renders otherwise ***
@@ -57,7 +58,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    createCourse: (course) => dispatch(courseActions.createCourse(course)),
+    actions: bindActionCreators(courseActions, dispatch), // bindActionCreators will accept a function or an object so you can pass it all of your actions or you can just pass it one action in order to wrap it, it returns each action function wrapped in a dispatch() function. This line will wrap all course actions.
   };
 }
 
