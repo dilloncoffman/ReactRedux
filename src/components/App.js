@@ -1,11 +1,10 @@
-import React from 'react'
-import { Route, Switch } from 'react-router-dom'
-import HomePage from './home/HomePage'
-import AboutPage from './about/AboutPage'
-import CoursesPage from './courses/CoursesPage'
-import Header from './common/Header'
-import PageNotFound from './PageNotFound'
-
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import HomePage from './home/HomePage';
+import AboutPage from './about/AboutPage';
+import CoursesPage from './courses/CoursesPage';
+import Header from './common/Header';
+import PageNotFound from './PageNotFound';
 
 export default function App() {
   return (
@@ -18,5 +17,5 @@ export default function App() {
         <Route component={PageNotFound} />
       </Switch>
     </div>
-  )
+  );
 }
