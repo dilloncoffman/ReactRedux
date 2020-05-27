@@ -22,12 +22,12 @@ class CoursesPage extends Component {
     const { dispatch } = this.props;
 
     dispatch(courseActions.createCourse(course)); // dispatch createCourse action and passing it new course
-
-    alert(course.title);
   };
 
   render() {
     const { course } = this.state;
+    const { courses } = this.props; // courses is available as a prop because we mapped the Redux store state for courses to this container component in mapStateToProps function below
+
     // By attaching the onSubmit handler to the form, both the submit button and the enter key will submit the form, improving accessibility
     return (
       <form onSubmit={this.handleSubmit}>
@@ -35,12 +35,16 @@ class CoursesPage extends Component {
         <h3>Add Course</h3>
         <input type="text" onChange={this.handleChange} value={course.title} />
         <input type="submit" value="Save" />
+        {courses.map((courseInState) => (
+          <div key={courseInState.title}>{courseInState.title}</div>
+        ))}
       </form>
     );
   }
 }
 
 CoursesPage.propTypes = {
+  courses: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired, // clarified that we expect the dispatch() to be passed in to CoursesPage component because connect() automatically injects it as a prop IF we omit mapDispatchToProps from the 2nd arg of connect()
 };
 
