@@ -7,13 +7,13 @@ export default class CoursesPage extends Component {
     },
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { course } = this.state; // reference to this.state works because arrow functions inherit the binding context of their enclosing scope; arrow functions don't have a 'this' binding, so the 'this' keyword inside references our component's class instance
     const newCourse = { ...course, title: event.target.value };
     this.setState({ course: newCourse });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     const { course } = this.state;
     alert(course.title);
