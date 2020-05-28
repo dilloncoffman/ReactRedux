@@ -16,7 +16,7 @@
     },
     {
       "id": 3,
-      "title": "Creating Reusable React Components",
+      "title": "Creating Reusable React Components Test",
       "slug": "react-creating-reusable-components",
       "authorId": 1,
       "category": "JavaScript"
@@ -69,22 +69,6 @@
       "slug": "web-components-shadow-dom",
       "authorId": 1,
       "category": "HTML5"
-    },
-    {
-      "id": 11,
-      "title": "505",
-      "authorId": 2,
-      "category": "Reacttttttt",
-      "createdAt": 1590670681124,
-      "slug": "505"
-    },
-    {
-      "id": 12,
-      "title": "title",
-      "authorId": 3,
-      "category": "asdfasdfasdfa",
-      "createdAt": 1590671250750,
-      "slug": "title"
     }
   ],
   "authors": [

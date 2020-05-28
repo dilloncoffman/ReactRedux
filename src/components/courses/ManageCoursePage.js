@@ -26,6 +26,8 @@ const ManageCoursePage = ({
       loadCoursesDispatch().catch((error) => {
         alert(`Loading courses failed: ${error}`);
       });
+    } else {
+      setCourse({ ...props.course });
     }
 
     if (authors.length === 0) {
@@ -34,7 +36,9 @@ const ManageCoursePage = ({
         alert(`Loading authors failed: ${error}`);
       });
     }
-  }, []); // empty dependency array to run only once - when the component mounts
+
+    // eslint-disable-next-line react/destructuring-assignment
+  }, [props.course]); // empty dependency array to run only once - when the component mounts
 
   const handleChange = (event) => {
     const { name, value } = event.target; // this destructure avoids the event getting garbage collected so that it's available within the nested setCourse callback, allows us to retain a local reference to the event
@@ -48,7 +52,7 @@ const ManageCoursePage = ({
     event.preventDefault();
     saveCourseDispatch(course).then(() => {
       // redirect to /courses page
-      history.push('./courses');
+      history.push('/courses');
     });
   };
 
@@ -75,10 +79,21 @@ ManageCoursePage.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
+// A selector function that selects data from the Redux store
+export function getCourseBySlug(courses, slug) {
+  return courses.find((course) => course.slug === slug) || null;
+}
+
 // *** BE SPECIFIC. REQUEST ONLY THE DATA YOUR COMPONENT NEEDS. Could cause unnecessary re-renders otherwise ***
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  const { slug } = ownProps.match.params;
+  const course =
+    slug && state.courses.length > 0 // Length check is to check if async call to getCourses has finished and there are actually courses in Redux store state
+      ? getCourseBySlug(state.courses, slug)
+      : newCourse;
+
   return {
-    course: newCourse,
+    course, // short hand course: course
     courses: state.courses,
     authors: state.authors,
   };
