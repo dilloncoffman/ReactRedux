@@ -3,11 +3,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router-dom';
 import * as authorActions from '../../redux/actions/authorActions';
 import * as courseActions from '../../redux/actions/courseActions';
 import CourseList from './CourseList';
 
 class CoursesPage extends Component {
+  // can use a class field instead of a constructor to declare state
+  state = {
+    redirectToAddCoursePage: false
+  };
+
   componentDidMount() {
     const { actions, courses, authors } = this.props;
 
@@ -26,10 +32,13 @@ class CoursesPage extends Component {
 
   render() {
     const { courses } = this.props; // courses is available as a prop because we mapped the Redux store state for courses to this container component in mapStateToProps function below
+    const { redirectToAddCoursePage } = this.state
 
     return (
       <>
+        {redirectToAddCoursePage && <Redirect to="/course" />}
         <h2>Courses</h2>
+        <button type="button" className="btn btn-primary add-course" style={{ marginBottom: 20 }} onClick={() => { this.setState({ redirectToAddCoursePage: true }) }}>Add Course</button>
         <CourseList courses={courses} />
       </>
     );

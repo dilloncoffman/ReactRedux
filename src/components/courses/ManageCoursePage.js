@@ -12,6 +12,7 @@ const ManageCoursePage = ({
   loadAuthorsDispatch,
   courses,
   authors,
+  history, // any component loaded via <Route> gets history passed in on props from React Router
   ...props // assign any props I haven't destructured above to a variable called props
 }) => {
   // *** LOCAL STATE ***
@@ -45,7 +46,10 @@ const ManageCoursePage = ({
 
   const handleSave = (event) => {
     event.preventDefault();
-    saveCourseDispatch(course);
+    saveCourseDispatch(course).then(() => {
+      // redirect to /courses page
+      history.push('./courses');
+    });
   };
 
   return (
@@ -68,6 +72,7 @@ ManageCoursePage.propTypes = {
   loadCoursesDispatch: PropTypes.func.isRequired,
   saveCourseDispatch: PropTypes.func.isRequired,
   loadAuthorsDispatch: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 // *** BE SPECIFIC. REQUEST ONLY THE DATA YOUR COMPONENT NEEDS. Could cause unnecessary re-renders otherwise ***
