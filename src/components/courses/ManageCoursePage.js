@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loadAuthors } from '../../redux/actions/authorActions';
-import { loadCourses } from '../../redux/actions/courseActions';
+import { loadCourses, saveCourse } from '../../redux/actions/courseActions';
 import CourseForm from './CourseForm';
 import { newCourse } from '../../../tools/mockData';
 
 const ManageCoursePage = ({
   loadCoursesDispatch,
+  saveCourseDispatch,
   loadAuthorsDispatch,
   courses,
   authors,
   ...props // assign any props I haven't destructured above to a variable called props
 }) => {
-  // LOCAL STATE
+  // *** LOCAL STATE ***
   // eslint-disable-next-line react/destructuring-assignment
   const [course, setCourse] = useState({ ...props.course });
   const [errors, setErrors] = useState({});
@@ -37,8 +38,14 @@ const ManageCoursePage = ({
   const handleChange = (event) => {
     const { name, value } = event.target; // this destructure avoids the event getting garbage collected so that it's available within the nested setCourse callback, allows us to retain a local reference to the event
     setCourse((prevCourse) => ({
+      ...prevCourse,
       [name]: name === 'authorId' ? parseInt(value, 10) : value, // events return numbers as strings so need to parse authorId to an int
     }));
+  };
+
+  const handleSave = (event) => {
+    event.preventDefault();
+    saveCourseDispatch(course);
   };
 
   return (
@@ -48,6 +55,7 @@ const ManageCoursePage = ({
         errors={errors}
         authors={authors}
         onChange={handleChange}
+        onSave={handleSave}
       />
     </>
   );
@@ -58,6 +66,7 @@ ManageCoursePage.propTypes = {
   course: PropTypes.object.isRequired,
   courses: PropTypes.array.isRequired,
   loadCoursesDispatch: PropTypes.func.isRequired,
+  saveCourseDispatch: PropTypes.func.isRequired,
   loadAuthorsDispatch: PropTypes.func.isRequired,
 };
 
@@ -74,6 +83,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
   // The bound action passed in on props "wins", function scope here takes precedence over module scope
   loadCoursesDispatch: loadCourses, // can do this syntax because actions destructured in top of file imports match the names of the props we want to provide
+  saveCourseDispatch: saveCourse,
   loadAuthorsDispatch: loadAuthors,
 };
 
