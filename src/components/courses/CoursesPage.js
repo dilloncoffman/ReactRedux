@@ -7,6 +7,7 @@ import { Redirect } from 'react-router-dom';
 import * as authorActions from '../../redux/actions/authorActions';
 import * as courseActions from '../../redux/actions/courseActions';
 import CourseList from './CourseList';
+import Spinner from '../common/Spinner';
 
 class CoursesPage extends Component {
   // can use a class field instead of a constructor to declare state
@@ -38,6 +39,7 @@ class CoursesPage extends Component {
       <>
         {redirectToAddCoursePage && <Redirect to="/course" />}
         <h2>Courses</h2>
+        <Spinner />
         <button type="button" className="btn btn-primary add-course" style={{ marginBottom: 20 }} onClick={() => { this.setState({ redirectToAddCoursePage: true }) }}>Add Course</button>
         <CourseList courses={courses} />
       </>
