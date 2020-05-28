@@ -12,19 +12,21 @@ import Spinner from '../common/Spinner';
 class CoursesPage extends Component {
   // can use a class field instead of a constructor to declare state
   state = {
-    redirectToAddCoursePage: false
+    redirectToAddCoursePage: false,
   };
 
   componentDidMount() {
     const { actions, courses, authors } = this.props;
 
-    if (courses.length === 0) { // to avoid reloading if courses data was already loaded
+    if (courses.length === 0) {
+      // to avoid reloading if courses data was already loaded
       actions.loadCourses().catch((error) => {
         alert(`Loading courses failed: ${error}`);
       });
     }
 
-    if (authors.length === 0) { // to avoid reloading if authors data was already loaded
+    if (authors.length === 0) {
+      // to avoid reloading if authors data was already loaded
       actions.loadAuthors().catch((error) => {
         alert(`Loading authors failed: ${error}`);
       });
@@ -32,16 +34,32 @@ class CoursesPage extends Component {
   }
 
   render() {
-    const { courses } = this.props; // courses is available as a prop because we mapped the Redux store state for courses to this container component in mapStateToProps function below
-    const { redirectToAddCoursePage } = this.state
+    const { courses, loading } = this.props; // courses and loading are available as props because we mapped the Redux store state for courses and apiCallsInProgress to this container component in mapStateToProps function below
+    const { redirectToAddCoursePage } = this.state;
 
     return (
       <>
         {redirectToAddCoursePage && <Redirect to="/course" />}
+
         <h2>Courses</h2>
-        <Spinner />
-        <button type="button" className="btn btn-primary add-course" style={{ marginBottom: 20 }} onClick={() => { this.setState({ redirectToAddCoursePage: true }) }}>Add Course</button>
-        <CourseList courses={courses} />
+
+        {loading ? (
+          <Spinner />
+        ) : (
+            <>
+              <button
+                type="button"
+                className="btn btn-primary add-course"
+                style={{ marginBottom: 20 }}
+                onClick={() => {
+                  this.setState({ redirectToAddCoursePage: true });
+                }}
+              >
+                Add Course
+            </button>
+              <CourseList courses={courses} />
+            </>
+          )}
       </>
     );
   }
@@ -51,6 +69,7 @@ CoursesPage.propTypes = {
   authors: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired, // we expect actions to be passed in and required because we wrap all of our courseActions below with a call to dispatch()
+  loading: PropTypes.bool.isRequired,
 };
 
 // *** BE SPECIFIC. REQUEST ONLY THE DATA YOUR COMPONENT NEEDS. Could cause unnecessary re-renders otherwise ***
@@ -59,13 +78,15 @@ function mapStateToProps(state) {
     courses:
       state.authors.length === 0 // need to ensure author data (since it is fetched asynchronously) is available before doing this mapping
         ? []
-        : state.courses.map((course) => ({ // using arrow function implicit return to return a course with it's author's name attached to the course state itself that wasn't originally on the course object from the courseApi.js
+        : state.courses.map((course) => ({
+          // using arrow function implicit return to return a course with it's author's name attached to the course state itself that wasn't originally on the course object from the courseApi.js
           ...course,
           authorName: state.authors.find(
             (author) => author.id === course.authorId
           ).name,
         })), // map over each course to weave in the author's name that goes along with a specific course to the courses state
     authors: state.authors, // need to pass in as props as well to ...
+    loading: state.apiCallsInProgress > 0,
   };
 }
 
