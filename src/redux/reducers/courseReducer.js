@@ -11,6 +11,8 @@ export default function courseReducer(state = initialState.courses, action) {
       );
     case types.LOAD_COURSES_SUCCESS:
       return action.courses; // since whatever is returned from our API will simply replace what was in our state, all we have to do is return the dispatch payload of courses here
+    case types.DELETE_COURSE_OPTIMISTIC:
+      return state.filter((course) => course.id !== action.course.id); // return new array using filter() of courses but omit (filter out) the one just deleted
     default:
       return state;
   }

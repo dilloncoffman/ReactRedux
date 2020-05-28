@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import * as authorActions from '../../redux/actions/authorActions';
 import * as courseActions from '../../redux/actions/courseActions';
 import CourseList from './CourseList';
@@ -33,6 +34,15 @@ class CoursesPage extends Component {
     }
   }
 
+  handleDeleteCourse = course => {
+    const { actions } = this.props
+
+    toast.success('Course deleted.');
+    actions.deleteCourse(course).catch(error => {
+      toast.error(`Delete failed.${error.message}`, { autoClose: false })
+    })
+  }
+
   render() {
     const { courses, loading } = this.props; // courses and loading are available as props because we mapped the Redux store state for courses and apiCallsInProgress to this container component in mapStateToProps function below
     const { redirectToAddCoursePage } = this.state;
@@ -57,7 +67,7 @@ class CoursesPage extends Component {
               >
                 Add Course
             </button>
-              <CourseList courses={courses} />
+              <CourseList onDeleteClick={this.handleDeleteCourse} courses={courses} />
             </>
           )}
       </>
@@ -95,6 +105,7 @@ function mapDispatchToProps(dispatch) {
     actions: {
       loadCourses: bindActionCreators(courseActions.loadCourses, dispatch), // bindActionCreators will accept a function or an object so you can pass it all of your actions or you can just pass it one action in order to wrap it like we do for loadCourses and loadAuthors each, it returns each action function wrapped in a dispatch() function. This line will wrap all course actions.
       loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch),
+      deleteCourse: bindActionCreators(courseActions.deleteCourse, dispatch),
     },
   };
 }
