@@ -1,34 +1,61 @@
-/* eslint-disable prettier/prettier */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loadAuthors } from '../../redux/actions/authorActions';
-import { loadCourses } from '../../redux/actions/courseAction';
+import { loadCourses } from '../../redux/actions/courseActions';
+import CourseForm from './CourseForm';
+import { newCourse } from '../../../tools/mockData';
 
-const ManageCoursePage = ({ loadCoursesDispatch, loadAuthorsDispatch, courses, authors }) => {
+const ManageCoursePage = ({
+  loadCoursesDispatch,
+  loadAuthorsDispatch,
+  courses,
+  authors,
+  ...props // assign any props I haven't destructured above to a variable called props
+}) => {
+  // LOCAL STATE
+  // eslint-disable-next-line react/destructuring-assignment
+  const [course, setCourse] = useState({ ...props.course });
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
-    if (courses.length === 0) { // to avoid reloading if courses data was already loaded
+    if (courses.length === 0) {
+      // to avoid reloading if courses data was already loaded
       loadCoursesDispatch().catch((error) => {
         alert(`Loading courses failed: ${error}`);
       });
     }
 
-    if (authors.length === 0) { // to avoid reloading if authors data was already loaded
+    if (authors.length === 0) {
+      // to avoid reloading if authors data was already loaded
       loadAuthorsDispatch().catch((error) => {
         alert(`Loading authors failed: ${error}`);
       });
     }
-  }, []) // empty dependency array to run only once - when the component mounts
+  }, []); // empty dependency array to run only once - when the component mounts
+
+  const handleChange = (event) => {
+    const { name, value } = event.target; // this destructure avoids the event getting garbage collected so that it's available within the nested setCourse callback, allows us to retain a local reference to the event
+    setCourse((prevCourse) => ({
+      [name]: name === 'authorId' ? parseInt(value, 10) : value, // events return numbers as strings so need to parse authorId to an int
+    }));
+  };
 
   return (
     <>
-      <h2>Manage Course</h2>
+      <CourseForm
+        course={course}
+        errors={errors}
+        authors={authors}
+        onChange={handleChange}
+      />
     </>
   );
-}
+};
 
 ManageCoursePage.propTypes = {
   authors: PropTypes.array.isRequired,
+  course: PropTypes.object.isRequired,
   courses: PropTypes.array.isRequired,
   loadCoursesDispatch: PropTypes.func.isRequired,
   loadAuthorsDispatch: PropTypes.func.isRequired,
@@ -37,6 +64,7 @@ ManageCoursePage.propTypes = {
 // *** BE SPECIFIC. REQUEST ONLY THE DATA YOUR COMPONENT NEEDS. Could cause unnecessary re-renders otherwise ***
 function mapStateToProps(state) {
   return {
+    course: newCourse,
     courses: state.courses,
     authors: state.authors,
   };
@@ -45,9 +73,9 @@ function mapStateToProps(state) {
 // if we declare mapDispatchToProps as an object instead, each property will automatically be bound to dispatch
 const mapDispatchToProps = {
   // The bound action passed in on props "wins", function scope here takes precedence over module scope
-  loadCoursesDispatch: loadCourses, // can do this syntax because actions destructured in top of file imports match the names of the props we want to provide 
+  loadCoursesDispatch: loadCourses, // can do this syntax because actions destructured in top of file imports match the names of the props we want to provide
   loadAuthorsDispatch: loadAuthors,
-}
+};
 
 // *** WHY we use connect(mapStateToProps, mapDispatchToProps)(OurContainerComponent): connect() returns a function that then calls our component ***
 // const connectStateAndProps = connect(mapStateToProps, mapDispatchToProps);

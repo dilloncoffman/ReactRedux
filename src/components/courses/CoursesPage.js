@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import * as authorActions from '../../redux/actions/authorActions';
-import * as courseActions from '../../redux/actions/courseAction';
+import * as courseActions from '../../redux/actions/courseActions';
 import CourseList from './CourseList';
 
 class CoursesPage extends Component {

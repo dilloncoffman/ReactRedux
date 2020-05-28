@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 const TextInput = ({ name, label, onChange, placeholder, value, error }) => {
   let wrapperClass = 'form-group';
   if (error && error.length > 0) {
+    // eslint-disable-next-line no-useless-concat
     wrapperClass += ' ' + 'has-error';
   }
 
