@@ -65,6 +65,7 @@ module.exports = {
           {
             loader: 'postcss-loader',
             options: {
+              // eslint-disable-next-line global-require
               plugins: () => [require('cssnano')], // minify CSS, Loaders run from bottom up so postcss-loader will run first
               sourceMap: true,
             },
