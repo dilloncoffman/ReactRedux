@@ -9,7 +9,7 @@ import CourseForm from './CourseForm';
 import { newCourse } from '../../../tools/mockData';
 import Spinner from '../common/Spinner';
 
-const ManageCoursePage = ({
+export const ManageCoursePage = ({
   loadCoursesDispatch,
   saveCourseDispatch,
   loadAuthorsDispatch,

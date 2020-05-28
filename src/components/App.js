@@ -7,6 +7,8 @@ import AboutPage from './about/AboutPage';
 import CoursesPage from './courses/CoursesPage';
 import Header from './common/Header';
 import PageNotFound from './PageNotFound';
+// Need to use ESLint statement below, test for ManageCoursePage uses a disconnected named export to test the ManageCoursePage whereas the actual component exports a connected container component for Redux, this import is correct here for a default export
+// eslint-disable-next-line import/no-named-as-default
 import ManageCoursePage from './courses/ManageCoursePage';
 
 export default function App() {
