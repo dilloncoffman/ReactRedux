@@ -15,13 +15,6 @@
       "category": "JavaScript"
     },
     {
-      "id": 4,
-      "title": "Building a JavaScript Development Environment",
-      "slug": "javascript-development-environment",
-      "authorId": 1,
-      "category": "JavaScript"
-    },
-    {
       "id": 6,
       "title": "Building Applications in React and Flux",
       "slug": "react-flux-building-applications",
