@@ -1,10 +1,13 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify'
 import { loadAuthors } from '../../redux/actions/authorActions';
 import { loadCourses, saveCourse } from '../../redux/actions/courseActions';
 import CourseForm from './CourseForm';
 import { newCourse } from '../../../tools/mockData';
+import Spinner from '../common/Spinner';
 
 const ManageCoursePage = ({
   loadCoursesDispatch,
@@ -19,6 +22,7 @@ const ManageCoursePage = ({
   // eslint-disable-next-line react/destructuring-assignment
   const [course, setCourse] = useState({ ...props.course });
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -50,21 +54,28 @@ const ManageCoursePage = ({
 
   const handleSave = (event) => {
     event.preventDefault();
+    setSaving(true);
     saveCourseDispatch(course).then(() => {
-      // redirect to /courses page
+      // show success toast and redirect to /courses page
+      toast.success('Course saved.');
       history.push('/courses');
     });
   };
 
   return (
     <>
-      <CourseForm
-        course={course}
-        errors={errors}
-        authors={authors}
-        onChange={handleChange}
-        onSave={handleSave}
-      />
+      {authors.length === 0 || courses.length === 0 ? (
+        <Spinner />
+      ) : (
+          <CourseForm
+            course={course}
+            errors={errors}
+            authors={authors}
+            onChange={handleChange}
+            onSave={handleSave}
+            saving={saving}
+          />
+        )}
     </>
   );
 };
