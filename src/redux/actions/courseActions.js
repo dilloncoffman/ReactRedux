@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import * as courseApi from '../../api/courseApi';
+import { beginApiCall } from './apiStatusActions';
 
 // This function improves the readability of loadCourses() dispatch below
 export function loadCoursesSuccess(courses) {
@@ -17,6 +18,7 @@ export function updateCourseSuccess(course) {
 export function loadCourses() {
   // redux-thunk injects dispatch so we don't have to!
   return function (dispatch) {
+    dispatch(beginApiCall()); // dispatch to show loading spinner
     return courseApi
       .getCourses()
       .then((courses) => {
@@ -31,6 +33,7 @@ export function loadCourses() {
 // Updates an existing course or saves a new course
 export function saveCourse(course) {
   return function (dispatch) {
+    dispatch(beginApiCall()); // dispatch to show loading spinner
     return courseApi
       .saveCourse(course)
       .then((savedCourse) =>
