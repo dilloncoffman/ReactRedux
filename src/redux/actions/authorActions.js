@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 import * as authorApi from '../../api/authorApi';
-import { beginApiCall } from './apiStatusActions';
+import { beginApiCall, apiCallError } from './apiStatusActions';
 
 // just returns the action to improve readability and could be used in other dispatches if we had multiple actions
 export function loadAuthorsSuccess(authors) {
@@ -17,6 +17,7 @@ export function loadAuthors() {
         dispatch(loadAuthorsSuccess(authors));
       })
       .catch((error) => {
+        dispatch(apiCallError(error)); // dispatch to decrement apiCallsInProgress Redux store state if error
         throw error;
       });
   };

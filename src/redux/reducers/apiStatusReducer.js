@@ -13,8 +13,11 @@ export default function apiCallStatusReducer(
     return state + 1;
   }
   // ESLint rule prevents using elseif's
-  if (actionTypeEndsInSuccess(action.type)) {
-    // if action type dispatched ends in success then decrement apiCallsInProgress Redux store state
+  if (
+    action.type === types.API_CALL_ERROR ||
+    actionTypeEndsInSuccess(action.type)
+  ) {
+    // if action type dispatched is an api call error or it ends in success then decrement apiCallsInProgress Redux store state
     return state - 1;
   }
 
