@@ -31,10 +31,15 @@ export function loadCourses() {
 // Updates an existing course or saves a new course
 export function saveCourse(course) {
   return function (dispatch) {
-    return courseApi.saveCourse(course).then((savedCourse) => {
-      course.id
-        ? dispatch(updateCourseSuccess(savedCourse))
-        : dispatch(createCourseSuccess(savedCourse));
-    });
+    return courseApi
+      .saveCourse(course)
+      .then((savedCourse) =>
+        course.id
+          ? dispatch(updateCourseSuccess(savedCourse))
+          : dispatch(createCourseSuccess(savedCourse))
+      )
+      .catch((error) => {
+        throw error;
+      });
   };
 }
